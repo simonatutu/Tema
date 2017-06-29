@@ -5,25 +5,16 @@ namespace Library
 {
     public class UnitOfWork<TContext> where TContext : DbContext, new()
     {
-        private LibraryContext context = new LibraryContext();
+        private readonly TContext Context;
 
-        private GenericRepository<Book> genericRepository; //check
-
-        public GenericRepository<Book> GenericRepository
+        public UnitOfWork(TContext context)
         {
-            get
-            {
-                if (this.genericRepository == null)
-                {
-                    this.genericRepository = new GenericRepository<Book>(context);
-                }
-                return genericRepository;
-            }
+            Context = context;
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
         private bool disposed = false;
@@ -34,7 +25,7 @@ namespace Library
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    Context.Dispose();
                 }
             }
             this.disposed = true;
